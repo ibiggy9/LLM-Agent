@@ -2,10 +2,9 @@ import openai
 import os
 import re
 
-key = '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'
+key = 'GPT-KEY'
 
 openai.api_key = key
-
 
 def split_questions(text):
     questions = []
@@ -18,9 +17,9 @@ def split_questions(text):
     return questions
 
 def generate_action_plan(conversation):
-    conversation.append({"role": "user", "content": "As GPT-3.5, you can perform any action in a browser and any amount of text manipulation, but you cannot do anything else. Create a plan that reflects these capabilities."})
+    conversation.append({"role": "user", "content": "As GPT-4, you can perform any action in a browser and any amount of text manipulation, but you cannot do anything else. Create a plan that reflects these capabilities."})
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=conversation,
         max_tokens=150,
         temperature=0.6,
@@ -36,20 +35,20 @@ def clarifyingQuestions():
     user_goal = input("What would you like me to do? ")
     background_context = input("Please provide any background context: ")
 
-    # Set up the conversation for GPT-3.5 Turbo
+    # Set up the conversation for GPT-4 Turbo
     conversation = [
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": f"{user_goal}\nBackground context: {background_context}"}
     ]
 
     while True:
-        conversation.append({"role": "user", "content": "As GPT-3.5, assume you can perform any action in a browser as well as any text manipulation. "
+        conversation.append({"role": "user", "content": "As GPT-4, assume you can perform any action in a browser as well as any text manipulation. "
                                                         "Ask a clarifying question to better understand the goal and create an actionable plan:"})
         question_text = generate_action_plan(conversation)
         question_text = question_text.strip()
 
         # Ask the generated question
-        print(f"\nGPT-3.5 generated the following clarifying question:")
+        print(f"\nGPT-4 generated the following clarifying question:")
         print(f"{question_text}")
         answer = input("Your answer: ")
         conversation.append({"role": "user", "content": answer})
@@ -67,7 +66,7 @@ def clarifyingQuestions():
 
 def review_and_update_plan(conversation):
     action_plan_prompt = ("Based on the provided information, determine if you can accomplish the user's request "
-                      "by performing actions in a browser or by text manipulation using your capabilities as GPT-3.5. "
+                      "by performing actions in a browser or by text manipulation using your capabilities as GPT-4. "
                       "You cannot perform any other actions outside of these constraints. "
                       "Create an actionable plan for the user:")
 
@@ -117,7 +116,7 @@ def determine_task_type(plan_manifest):
     for task in plan_manifest:
         description = task["planItemDescription"]
 
-        # Query GPT-3.5 Turbo to classify the task
+        # Query GPT-4 Turbo to classify the task
         conversation = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": f"Classify the following task as 'GPT', 'browser session', or 'neither': {description}"}
